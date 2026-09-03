@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SprayHub — магазин балончиків та стріт-арт матеріалів</title>
+<style>
+  :root{
+    --concrete:#EDEAE4;
+    --concrete-dark:#DDD8CE;
+    --ink:#1B1B1B;
+    --ink-soft:#4A4740;
+    --magenta:#E63888;
+    --cyan:#00AEEF;
+    --orange:#FF6B35;
+    --line:#1B1B1B;
+    --white:#FFFFFF;
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--concrete);
+    color:var(--ink);
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;
+    line-height:1.5;
+  }
+  h1,h2,h3,.display{
+    font-family:'Oswald',Impact,'Arial Narrow',sans-serif;
+    font-weight:700;
+    letter-spacing:0.01em;
+    text-transform:uppercase;
+    margin:0;
+  }
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  img{max-width:100%;display:block;}
+
+  .spray-dot{border-radius:50%;position:absolute;filter:blur(0.5px);opacity:0.85;}
+
+  /* HEADER */
+  header{position:sticky;top:0;z-index:50;background:var(--concrete);border-bottom:3px solid var(--ink);}
+  .topbar{background:var(--ink);color:var(--concrete);font-size:12.5px;}
+  .topbar-inner{max-width:1180px;margin:0 auto;padding:7px 24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .topbar a{color:var(--concrete);}
+  .topbar a:hover{color:var(--orange);}
+  .header-inner{max-width:1180px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .logo{font-family:'Oswald',sans-serif;font-weight:700;font-size:24px;text-transform:uppercase;letter-spacing:0.02em;display:flex;align-items:center;gap:8px;}
+  .logo .dot{width:10px;height:10px;background:var(--magenta);border-radius:50%;display:inline-block;}
+  nav{display:flex;gap:24px;align-items:center;}
+  nav a{font-size:14px;font-weight:600;position:relative;padding:4px 0;white-space:nowrap;}
+  nav a:hover{color:var(--magenta);}
+  .header-actions{display:flex;gap:10px;align-items:center;}
+  .icon-btn{background:var(--ink);color:var(--concrete);border:none;padding:10px 16px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px;border-radius:var(--radius);transition:background 0.15s;}
+  .icon-btn:hover{background:var(--magenta);}
+  .icon-btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--ink);}
+  .icon-btn.ghost:hover{background:var(--ink);color:var(--concrete);}
+  @media(max-width:900px){nav{display:none;} .header-inner{flex-wrap:wrap;}}
+
+  /* HERO */
+  .hero{position:relative;overflow:hidden;border-bottom:3px solid var(--ink);background:var(--concrete);}
+  .hero-inner{max-width:1180px;margin:0 auto;padding:70px 24px 60px;position:relative;z-index:2;}
+  .hero-tag{font-size:14px;font-weight:600;color:var(--ink-soft);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+  .hero-tag .bar{width:36px;height:3px;background:var(--orange);display:inline-block;}
+  h1.hero-title{font-size:clamp(38px,6.5vw,80px);line-height:0.95;max-width:820px;}
+  h1.hero-title .stroke{color:transparent;-webkit-text-stroke:2px var(--ink);}
+  .hero-sub{max-width:480px;margin-top:24px;font-size:17px;color:var(--ink-soft);}
+  .hero-cta{margin-top:32px;display:flex;gap:14px;flex-wrap:wrap;}
+  .btn-primary{background:var(--ink);color:var(--concrete);padding:16px 30px;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:0.03em;border:none;border-radius:var(--radius);}
+  .btn-primary:hover{background:var(--magenta);}
+  .btn-outline{background:transparent;color:var(--ink);padding:16px 30px;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:0.03em;border:2px solid var(--ink);border-radius:var(--radius);}
+  .btn-outline:hover{border-color:var(--magenta);color:var(--magenta);}
+  .hero-cans{position:absolute;right:-40px;top:0;bottom:0;width:44%;display:flex;align-items:center;justify-content:center;z-index:1;}
+  @media(max-width:900px){.hero-cans{display:none;}}
+
+  /* CASHBACK STRIP */
+  .cashback-strip{background:var(--orange);border-bottom:3px solid var(--ink);}
+  .cashback-inner{max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:14.5px;color:var(--ink);text-align:center;flex-wrap:wrap;}
+
+  section{padding:64px 24px;max-width:1180px;margin:0 auto;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:32px;flex-wrap:wrap;gap:16px;}
+  .section-head h2{font-size:clamp(26px,4vw,40px);}
+  .section-num{font-size:14px;color:var(--ink-soft);font-weight:600;}
+
+  /* horizontal scroll row for bestsellers */
+  .hscroll{display:flex;gap:18px;overflow-x:auto;padding-bottom:10px;scroll-snap-type:x proximity;}
+  .hscroll::-webkit-scrollbar{height:6px;}
+  .hscroll::-webkit-scrollbar-thumb{background:var(--ink);border-radius:6px;}
+  .hscroll .card{min-width:230px;scroll-snap-align:start;}
+
+  .cat-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;}
+  .cat-chip{padding:9px 18px;border:2px solid var(--ink);border-radius:20px;font-size:14px;font-weight:600;background:transparent;color:var(--ink);}
+  .cat-chip.active{background:var(--ink);color:var(--concrete);}
+  .cat-chip:hover{border-color:var(--magenta);}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:22px;}
+  .card{background:var(--white);border:2px solid var(--ink);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:transform 0.15s;position:relative;}
+  .card:hover{transform:translateY(-4px);}
+  .card-img{aspect-ratio:1/1;background:var(--concrete-dark);display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:2px solid var(--ink);position:relative;}
+  .card-img img{width:100%;height:100%;object-fit:cover;}
+  .card-cat{position:absolute;top:10px;left:10px;background:var(--ink);color:var(--concrete);font-size:11px;font-weight:700;text-transform:uppercase;padding:4px 9px;border-radius:12px;z-index:2;}
+  .card-badge{position:absolute;top:10px;right:10px;font-size:11px;font-weight:700;text-transform:uppercase;padding:4px 9px;border-radius:12px;z-index:2;color:var(--white);}
+  .card-badge.novinka{background:var(--cyan);}
+  .card-badge.top{background:var(--magenta);}
+  .card-badge.discount{background:var(--orange);color:var(--ink);}
+  .card-body{padding:16px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .card-name{font-weight:700;font-size:16px;line-height:1.3;}
+  .card-desc{font-size:13px;color:var(--ink-soft);flex:1;}
+  .card-stock{font-size:12px;font-weight:600;color:#3E8E4F;}
+  .card-stock.low{color:var(--orange);}
+  .card-bottom{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+  .price-wrap{display:flex;flex-direction:column;}
+  .card-price{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;}
+  .card-oldprice{font-size:13px;color:var(--ink-soft);text-decoration:line-through;}
+  .add-btn{background:var(--ink);color:var(--concrete);border:none;padding:9px 14px;border-radius:var(--radius);font-weight:700;font-size:13px;text-transform:uppercase;}
+  .add-btn:hover{background:var(--magenta);}
+  .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--ink-soft);border:2px dashed var(--ink);border-radius:var(--radius);}
+
+  /* ABOUT */
+  .about{background:var(--ink);color:var(--concrete);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);}
+  .about-inner{max-width:1180px;margin:0 auto;padding:70px 24px;display:grid;grid-template-columns:1fr 1fr;gap:50px;}
+  @media(max-width:800px){.about-inner{grid-template-columns:1fr;}}
+  .about h2{color:var(--concrete);font-size:clamp(26px,4vw,38px);margin-bottom:18px;}
+  .about p{color:#C9C6BE;font-size:16px;max-width:440px;}
+  .stat-row{display:flex;gap:40px;margin-top:30px;flex-wrap:wrap;}
+  .stat b{font-family:'Oswald',sans-serif;font-size:34px;display:block;color:var(--cyan);}
+  .stat span{font-size:13px;color:#9C998F;}
+  .about-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;}
+  .about-list li{border-top:1px solid #3A3A38;padding-top:16px;font-size:15px;color:#DEDBD3;}
+  .about-list li:first-child{border-top:none;padding-top:0;}
+  .about-list b{color:var(--concrete);display:block;margin-bottom:4px;font-family:'Oswald',sans-serif;text-transform:uppercase;font-size:15px;}
+
+  /* PORTFOLIO */
+
+  /* TESTIMONIALS */
+  .testi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px;}
+  .testi-card{border:2px solid var(--ink);border-radius:var(--radius);padding:22px;background:var(--white);}
+  .testi-stars{color:var(--orange);font-size:14px;margin-bottom:10px;}
+  .testi-text{font-size:14px;color:var(--ink-soft);margin-bottom:14px;}
+  .testi-name{font-weight:700;font-size:14px;}
+
+  /* CONTACTS */
+  #contacts .contact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px;}
+  .contact-card{border:2px solid var(--ink);padding:24px;border-radius:var(--radius);background:var(--white);}
+  .contact-card b{display:block;font-family:'Oswald',sans-serif;text-transform:uppercase;margin-bottom:8px;font-size:15px;}
+  .contact-card span{color:var(--ink-soft);font-size:14px;}
+  .hours-table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px;}
+  .hours-table td{padding:5px 0;color:var(--ink-soft);}
+  .hours-table td:last-child{text-align:right;font-weight:600;color:var(--ink);}
+
+  /* FOOTER */
+  footer{border-top:3px solid var(--ink);background:var(--white);}
+  .footer-top{max-width:1180px;margin:0 auto;padding:50px 24px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:36px;}
+  @media(max-width:800px){.footer-top{grid-template-columns:1fr 1fr;}}
+  @media(max-width:480px){.footer-top{grid-template-columns:1fr;}}
+  .footer-col h4{font-size:13px;text-transform:uppercase;letter-spacing:0.03em;margin-bottom:14px;font-family:'Oswald',sans-serif;}
+  .footer-col a,.footer-col span{display:block;font-size:13.5px;color:var(--ink-soft);margin-bottom:9px;}
+  .footer-col a:hover{color:var(--magenta);}
+  .footer-social{display:flex;gap:10px;margin-top:6px;}
+  .footer-social a{width:34px;height:34px;border:2px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;margin:0;}
+  .footer-social a:hover{background:var(--ink);color:var(--concrete);}
+  .footer-bottom{border-top:1px solid var(--concrete-dark);}
+  .footer-bottom-inner{max-width:1180px;margin:0 auto;padding:18px 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--ink-soft);}
+
+  /* MODALS / DRAWER */
+  .overlay{position:fixed;inset:0;background:rgba(27,27,27,0.55);z-index:100;display:none;align-items:stretch;justify-content:flex-end;}
+  .overlay.open{display:flex;}
+  .overlay.center{align-items:center;justify-content:center;padding:20px;}
+  .panel{background:var(--concrete);width:min(440px,100%);height:100%;padding:26px;overflow-y:auto;box-shadow:-8px 0 24px rgba(0,0,0,0.2);}
+  .modal-box{background:var(--concrete);width:min(420px,100%);border-radius:var(--radius);padding:30px;border:2px solid var(--ink);max-height:90vh;overflow-y:auto;}
+  .panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+  .panel-head h3{font-size:22px;}
+  .close-x{background:none;border:none;font-size:22px;color:var(--ink);line-height:1;padding:4px;}
+  .close-x:hover{color:var(--magenta);}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink-soft);}
+  .field input,.field select,.field textarea{width:100%;padding:11px 12px;border:2px solid var(--ink);border-radius:var(--radius);font-family:inherit;font-size:14px;background:var(--white);color:var(--ink);}
+  .field textarea{resize:vertical;min-height:70px;}
+  .field-row{display:flex;gap:10px;}
+  .field-row .field{flex:1;}
+  .checkbox-field{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+  .checkbox-field input{width:auto;}
+  .checkbox-field label{margin:0;font-size:13px;font-weight:600;color:var(--ink-soft);}
+  .hint{font-size:12px;color:var(--ink-soft);margin-top:10px;line-height:1.5;}
+
+  .cart-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid #C9C6BE;}
+  .cart-item img{width:60px;height:60px;object-fit:cover;border-radius:var(--radius);border:2px solid var(--ink);background:var(--concrete-dark);}
+  .cart-item-info{flex:1;}
+  .cart-item-info .name{font-weight:700;font-size:14px;}
+  .cart-item-info .price{font-size:13px;color:var(--ink-soft);margin-top:2px;}
+  .qty-row{display:flex;align-items:center;gap:8px;margin-top:8px;}
+  .qty-btn{width:26px;height:26px;border:2px solid var(--ink);background:var(--white);border-radius:var(--radius);font-weight:700;}
+  .remove-link{font-size:12px;color:var(--magenta);font-weight:600;margin-left:auto;background:none;border:none;}
+  .cart-total{display:flex;justify-content:space-between;padding:18px 0;font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;border-top:2px solid var(--ink);margin-top:6px;}
+  .delivery-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+  .delivery-opt{display:flex;align-items:center;gap:10px;border:2px solid var(--ink);padding:12px;border-radius:var(--radius);font-size:14px;font-weight:600;}
+  .delivery-opt input{width:auto;}
+  .np-suggest{position:absolute;left:0;right:0;top:100%;background:var(--white);border:2px solid var(--ink);border-top:none;max-height:220px;overflow-y:auto;z-index:20;display:none;}
+  .np-suggest.open{display:block;}
+  .np-suggest-item{padding:10px 12px;font-size:13.5px;cursor:pointer;border-bottom:1px solid var(--concrete-dark);}
+  .np-suggest-item:last-child{border-bottom:none;}
+  .np-suggest-item:hover{background:var(--concrete);}
+  .np-suggest-empty{padding:10px 12px;font-size:13px;color:var(--ink-soft);}
+  .np-status{font-size:12px;color:var(--ink-soft);margin-top:4px;}
+
+  .admin-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .admin-tab{padding:8px 14px;border:2px solid var(--ink);border-radius:20px;font-size:13px;font-weight:600;background:transparent;}
+  .admin-tab.active{background:var(--ink);color:var(--concrete);}
+  .admin-section{display:none;}
+  .admin-section.active{display:block;}
+
+  .admin-products{display:flex;flex-direction:column;gap:10px;margin-top:14px;}
+  .admin-product-row{display:flex;gap:10px;align-items:center;border:1px solid #C9C6BE;padding:8px;border-radius:var(--radius);background:var(--white);}
+  .admin-product-row img{width:42px;height:42px;object-fit:cover;border-radius:var(--radius);background:var(--concrete-dark);}
+  .admin-product-row .name{font-size:13px;font-weight:700;flex:1;}
+  .del-product{background:none;border:2px solid var(--magenta);color:var(--magenta);font-size:12px;font-weight:700;padding:6px 10px;border-radius:var(--radius);white-space:nowrap;}
+  .del-product:hover{background:var(--magenta);color:var(--white);}
+
+  .order-row{border:1px solid #C9C6BE;padding:12px;border-radius:var(--radius);background:var(--white);margin-bottom:10px;font-size:13px;}
+  .order-row b{display:block;font-size:14px;margin-bottom:4px;}
+  .order-row .meta{color:var(--ink-soft);margin-bottom:6px;}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--concrete);padding:14px 22px;border-radius:var(--radius);font-size:14px;font-weight:600;z-index:200;opacity:0;transition:all 0.25s;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span>Доставка по всій Україні · Самовивіз у Києві</span>
+      <span><a href="tel:0800000000">0 800 000 000</a> · <a href="mailto:hello@sprayhub.shop">hello@sprayhub.shop</a></span>
+    </div>
+  </div>
+  <div class="header-inner">
+    <a href="#" class="logo"><span class="dot"></span>SprayHub</a>
+    <nav>
+      <a href="#catalog">Каталог</a>
+      <a href="#bestsellers">Хіти продажів</a>
+      <a href="#testimonials">Відгуки</a>
+      <a href="#contacts">Контакти</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn ghost" id="openAdminBtn">⚙️ Адмінка</button>
+      <button class="icon-btn" id="openCartBtn">🛒 Кошик <span id="cartCount">0</span></button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" style="padding:0;">
+  <div class="hero-inner">
+    <div class="hero-tag"><span class="bar"></span>SprayHub shop</div>
+    <h1 class="hero-title">Балон у руці —<br><span class="stroke">слід</span> на стіні.</h1>
+    <p class="hero-sub">Балончики, маркери, кепки та все для стріт-арту. Замовляй онлайн з доставкою по Україні або забирай сам у Києві.</p>
+    <div class="hero-cta">
+      <a href="#catalog" class="btn-primary">Дивитись каталог</a>
+      <a href="#about" class="btn-outline">Про нас</a>
+    </div>
+  </div>
+  <div class="hero-cans" aria-hidden="true">
+    <svg width="360" height="420" viewBox="0 0 360 420" xmlns="http://www.w3.org/2000/svg">
+      <circle class="spray-dot" cx="60" cy="80" r="6" fill="#E63888"/>
+      <circle class="spray-dot" cx="90" cy="60" r="3" fill="#00AEEF"/>
+      <circle class="spray-dot" cx="40" cy="120" r="4" fill="#FF6B35"/>
+      <circle class="spray-dot" cx="110" cy="140" r="2" fill="#1B1B1B"/>
+      <rect x="130" y="90" width="120" height="220" rx="14" fill="#1B1B1B"/>
+      <rect x="130" y="90" width="120" height="70" rx="14" fill="#E63888"/>
+      <rect x="165" y="60" width="50" height="36" rx="6" fill="#1B1B1B"/>
+      <ellipse cx="190" cy="60" rx="25" ry="10" fill="#00AEEF"/>
+      <rect x="140" y="180" width="100" height="8" fill="#EDEAE4" opacity="0.5"/>
+      <rect x="140" y="200" width="70" height="8" fill="#EDEAE4" opacity="0.5"/>
+      <circle class="spray-dot" cx="300" cy="300" r="5" fill="#FF6B35"/>
+      <circle class="spray-dot" cx="270" cy="330" r="3" fill="#E63888"/>
+      <circle class="spray-dot" cx="320" cy="340" r="2" fill="#00AEEF"/>
+    </svg>
+  </div>
+</section>
+
+<div class="cashback-strip">
+  <div class="cashback-inner">🎯 Кешбек 5% на кожне замовлення — бонуси списуються на наступну покупку</div>
+</div>
+
+<section id="bestsellers">
+  <div class="section-head">
+    <h2>Хіти продажів</h2>
+    <span class="section-num">Найпопулярніше цього місяця</span>
+  </div>
+  <div class="hscroll" id="bestsellerRow"></div>
+</section>
+
+<section id="catalog">
+  <div class="section-head">
+    <h2>Каталог</h2>
+    <span class="section-num" id="productCount">0 товарів</span>
+  </div>
+  <div class="cat-filters" id="catFilters"></div>
+  <div class="grid" id="productGrid"></div>
+</section>
+
+<div class="about" id="about">
+  <div class="about-inner">
+    <div>
+      <h2>Про SprayHub</h2>
+      <p>Ми возимо балончики й матеріали для тих, хто малює на стінах, а не на полотні. Асортимент — від щоденних робочих кольорів до вузьких кепок для тонких ліній.</p>
+      <div class="stat-row">
+        <div class="stat"><b>120+</b><span>кольорів у наявності</span></div>
+        <div class="stat"><b>1-2 дні</b><span>доставка по Україні</span></div>
+      </div>
+    </div>
+    <ul class="about-list">
+      <li><b>Перевірені бренди</b>Тільки баллони й маркери, які тестує наша команда перед тим, як додати в каталог.</li>
+      <li><b>Кепки під будь-яку лінію</b>Від fat cap для заливки до skinny cap для деталей.</li>
+      <li><b>Самовивіз і пошта</b>Забирай сам або отримуй Новою поштою чи Укрпоштою.</li>
+    </ul>
+  </div>
+</div>
+
+<section id="testimonials">
+  <div class="section-head">
+    <h2>Відгуки</h2>
+    <span class="section-num">Що кажуть клієнти</span>
+  </div>
+  <div class="testi-grid" id="testiGrid"></div>
+</section>
+
+<section id="contacts">
+  <div class="section-head"><h2>Контакти</h2></div>
+  <div class="contact-grid">
+    <div class="contact-card"><b>Телефон</b><span>0 800 000 000</span></div>
+    <div class="contact-card"><b>Пошта</b><span>hello@sprayhub.shop</span></div>
+    <div class="contact-card"><b>Самовивіз</b><span>Київ, вкажемо адресу після замовлення</span></div>
+    <div class="contact-card">
+      <b>Графік роботи</b>
+      <table class="hours-table">
+        <tr><td>Пн – Пт</td><td>09:00–19:00</td></tr>
+        <tr><td>Субота</td><td>10:00–17:00</td></tr>
+        <tr><td>Неділя</td><td>вихідний</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-col">
+      <div class="logo" style="margin-bottom:14px;"><span class="dot"></span>SprayHub</div>
+      <span>Балончики, маркери та матеріали для стріт-арту. Доставка по всій Україні, самовивіз у Києві.</span>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="Facebook">FB</a>
+        <a href="#" aria-label="Telegram">TG</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Каталог</h4>
+      <a href="#catalog">Балончики</a>
+      <a href="#catalog">Маркери</a>
+      <a href="#catalog">Кепки та насадки</a>
+      <a href="#catalog">Грунтовки та захист</a>
+    </div>
+    <div class="footer-col">
+      <h4>Інформація</h4>
+      <a href="#testimonials">Відгуки</a>
+      <a href="#about">Про нас</a>
+    </div>
+    <div class="footer-col">
+      <h4>Контакти</h4>
+      <span>0 800 000 000</span>
+      <span>hello@sprayhub.shop</span>
+      <span>Київ, самовивіз за адресою після замовлення</span>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <span>© 2026 SprayHub — каталог балончиків і матеріалів для стріт-арту</span>
+      <span>Демо-магазин, дані зберігаються локально у браузері</span>
+    </div>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="cartOverlay">
+  <div class="panel">
+    <div class="panel-head">
+      <h3>Кошик</h3>
+      <button class="close-x" id="closeCart">✕</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="cart-total"><span>Разом</span><span id="cartTotal">0 грн</span></div>
+    <button class="btn-primary" style="width:100%;margin-top:14px;" id="checkoutBtn">Оформити замовлення</button>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="overlay center" id="checkoutOverlay">
+  <div class="modal-box">
+    <div class="panel-head">
+      <h3>Оформлення замовлення</h3>
+      <button class="close-x" id="closeCheckout">✕</button>
+    </div>
+    <div class="field"><label>Ім'я та прізвище</label><input type="text" id="orderName" placeholder="Твоє ім'я"></div>
+    <div class="field"><label>Телефон</label><input type="tel" id="orderPhone" placeholder="+380..."></div>
+    <div class="field">
+      <label>Спосіб доставки</label>
+      <div class="delivery-opts">
+        <label class="delivery-opt"><input type="radio" name="delivery" value="Нова пошта" checked>Нова пошта</label>
+        <label class="delivery-opt"><input type="radio" name="delivery" value="Укрпошта">Укрпошта</label>
+        <label class="delivery-opt"><input type="radio" name="delivery" value="Самовивіз">Самовивіз</label>
+      </div>
+    </div>
+
+    <!-- Nova Poshta city/warehouse picker -->
+    <div id="npFields">
+      <div class="field" style="position:relative;">
+        <label>Місто</label>
+        <input type="text" id="npCityInput" placeholder="Почни вводити назву міста" autocomplete="off">
+        <div id="npCitySuggest" class="np-suggest"></div>
+      </div>
+      <div class="field">
+        <label>Відділення / поштомат</label>
+        <input type="text" id="npWarehouseFilter" placeholder="Пошук по номеру або адресі" disabled>
+        <select id="npWarehouseSelect" disabled style="margin-top:8px;">
+          <option value="">Спочатку обери місто</option>
+        </select>
+      </div>
+      <p class="hint" id="npHint"></p>
+    </div>
+
+    <!-- generic address field for Ukrposhta / pickup -->
+    <div class="field" id="genericAddressField" style="display:none;">
+      <label>Адреса / відділення</label>
+      <input type="text" id="orderAddress" placeholder="Місто, вулиця або № відділення">
+    </div>
+
+    <button class="btn-primary" style="width:100%;" id="submitOrderBtn">Оформити замовлення</button>
+    <p class="hint">Демо-режим: замовлення зберігається у цьому браузері. Після підключення бази даних його можна буде отримувати в адмінці з будь-якого пристрою.</p>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="overlay center" id="loginOverlay">
+  <div class="modal-box">
+    <div class="panel-head">
+      <h3>Вхід в адмінку</h3>
+      <button class="close-x" id="closeLogin">✕</button>
+    </div>
+    <div class="field"><label>Пароль</label><input type="password" id="adminPassword" placeholder="Пароль адмінки"></div>
+    <button class="btn-primary" style="width:100%;" id="loginBtn">Увійти</button>
+    <p class="hint">При першому вході встанови пароль для адмінки. Він зберігається тільки в цьому браузері.</p>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="overlay" id="adminOverlay">
+  <div class="panel" style="width:min(520px,100%);">
+    <div class="panel-head">
+      <h3>Адмін-панель SprayHub</h3>
+      <button class="close-x" id="closeAdmin">✕</button>
+    </div>
+    <a href="#" id="backToShop" style="font-size:13px;font-weight:600;color:var(--ink-soft);display:inline-block;margin-bottom:16px;">← До магазину</a>
+
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="products">Товари</button>
+      <button class="admin-tab" data-tab="categories">Категорії</button>
+      <button class="admin-tab" data-tab="orders">Замовлення</button>
+      <button class="admin-tab" data-tab="settings">Доставка</button>
+    </div>
+
+    <div class="admin-section active" id="tab-products">
+      <h3 style="font-size:16px;margin-bottom:12px;">Додати товар</h3>
+      <div class="field"><label>Назва</label><input type="text" id="pName" placeholder="Напр. Балон Hardcore 2 400мл"></div>
+      <div class="field-row">
+        <div class="field"><label>Ціна, грн</label><input type="number" id="pPrice" placeholder="250"></div>
+        <div class="field"><label>Стара ціна (якщо знижка)</label><input type="number" id="pOldPrice" placeholder="290"></div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Категорія</label>
+          <select id="pCategory"></select>
+        </div>
+        <div class="field">
+          <label>Мітка</label>
+          <select id="pBadge">
+            <option value="">Без мітки</option>
+            <option value="novinka">Новинка</option>
+            <option value="top">Топ</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Наявність</label><input type="text" id="pStock" placeholder="Напр. Більше 10 од."></div>
+        <div class="checkbox-field" style="margin-top:30px;">
+          <input type="checkbox" id="pHit"><label for="pHit">Показати в «Хітах продажів»</label>
+        </div>
+      </div>
+      <div class="field"><label>Фото (URL)</label><input type="text" id="pImage" placeholder="https://..."></div>
+      <div class="field"><label>Опис</label><textarea id="pDesc" placeholder="Короткий опис товару"></textarea></div>
+      <button class="btn-primary" id="addProductBtn" style="width:100%;">+ Додати товар</button>
+      <p class="hint">Ця версія зберігає товари у браузері. Для реального магазину з різних телефонів потрібна онлайн-база даних та підключення оплати.</p>
+
+      <h3 style="font-size:16px;margin:26px 0 6px;">Товари</h3>
+      <div class="admin-products" id="adminProductList"></div>
+    </div>
+
+    <div class="admin-section" id="tab-categories">
+      <h3 style="font-size:16px;margin-bottom:12px;">Нова категорія</h3>
+      <div class="field-row" style="align-items:flex-start;">
+        <div class="field" style="flex:1;"><label>Назва категорії</label><input type="text" id="newCategoryName" placeholder="Напр. Аксесуари"></div>
+      </div>
+      <button class="btn-primary" id="addCategoryBtn" style="width:100%;">+ Додати категорію</button>
+      <p class="hint">Нова категорія одразу зʼявиться у списку категорій нижче та в формі «Додати товар».</p>
+
+      <h3 style="font-size:16px;margin:26px 0 6px;">Категорії</h3>
+      <div class="admin-products" id="adminCategoryList"></div>
+      <p class="hint">Видалення категорії не видаляє товари — вони просто залишаться з попередньою назвою категорії, поки їх не відредагують.</p>
+    </div>
+
+    <div class="admin-section" id="tab-orders">
+      <h3 style="font-size:16px;margin-bottom:12px;">Замовлення</h3>
+      <div id="ordersList"></div>
+      <p class="hint">Замовлення оформлені відвідувачами зберігаються тут, у цьому браузері.</p>
+    </div>
+
+    <div class="admin-section" id="tab-settings">
+      <h3 style="font-size:16px;margin-bottom:12px;">Налаштування доставки</h3>
+      <div class="field"><label>Ключ API Нової пошти</label><input type="text" id="npApiKey" placeholder="Встав ключ"></div>
+      <button class="btn-outline" id="saveApiKey" style="margin-bottom:6px;">Зберегти ключ</button>
+      <p class="hint">Ключ потрібен для пошуку міст і відділень при оформленні замовлення (поля зʼявляються автоматично, коли ключ збережено). Для публічного магазину краще винести цей запит на сервер, щоб ключ не був видимий у браузері.</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const STORE_KEY='sprayhub_products';
+  const CATS_KEY='sprayhub_categories';
+  const CART_KEY='sprayhub_cart';
+  const PASS_KEY='sprayhub_admin_password';
+  const NP_KEY='sprayhub_np_api_key';
+  const ORDERS_KEY='sprayhub_orders';
+
+  const seedProducts=[
+    {id:'p1',name:'Балон Hardcore 2 — 400мл',price:245,oldPrice:null,category:'Балончики',image:'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500',desc:'Насичена кислотна ковзка фарба, швидкий сухий шар.',badge:'top',stock:'Більше 10 од.',hit:true},
+    {id:'p2',name:'Балон Montana Black 400мл',price:270,oldPrice:299,category:'Балончики',image:'https://images.unsplash.com/photo-1620207418302-439b387441b0?w=500',desc:'Класика для контурів і заливок, матовий фініш.',badge:'',stock:'В наявності',hit:true},
+    {id:'p3',name:'Маркер Molotow 227HS',price:180,oldPrice:null,category:'Маркери',image:'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=500',desc:'Заправний маркер для тегів і деталізації.',badge:'novinka',stock:'В наявності 2 од.',hit:false},
+    {id:'p4',name:'Fat Cap набір (5 шт)',price:95,oldPrice:null,category:'Кепки та насадки',image:'https://images.unsplash.com/photo-1608889175638-9e58ecad35a9?w=500',desc:'Широка лінія для швидкої заливки фону.',badge:'',stock:'Більше 10 од.',hit:true},
+    {id:'p5',name:'Skinny Cap набір (5 шт)',price:95,oldPrice:null,category:'Кепки та насадки',image:'https://images.unsplash.com/photo-1519638399535-1b036603ac77?w=500',desc:'Тонка лінія для контурів і дрібних деталей.',badge:'',stock:'Більше 10 од.',hit:false},
+    {id:'p6',name:'Грунт-спрей антикорозійний',price:190,oldPrice:null,category:'Грунтовки та захист',image:'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=500',desc:'Захисний шар під фарбу для металевих поверхонь.',badge:'',stock:'В наявності',hit:false},
+    {id:'p7',name:'Маркер спиртовий On the Run 060',price:289,oldPrice:null,category:'Маркери',image:'https://images.unsplash.com/photo-1587560699334-cc4ff634909a?w=500',desc:'Товста лінія 15мм для швидких тегів.',badge:'top',stock:'В наявності 2 од.',hit:true},
+    {id:'p8',name:'Стікери "Wanted" (50 шт)',price:109,oldPrice:null,category:'Кепки та насадки',image:'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500',desc:'Набір стікерів для вуличного маркування.',badge:'novinka',stock:'Більше 10 од.',hit:false}
+  ];
+
+  const testimonials=[
+    {name:'Олексій, Київ',text:'Замовляв балончики і кепки — приїхало на наступний день. Кольори збігаються з фото на сайті.',stars:5},
+    {name:'Марина, Львів',text:'Гарний вибір маркерів, є навіть рідкісні наконечники. Буду замовляти ще.',stars:5},
+    {name:'Дмитро, Одеса',text:'Все швидко, відповіли на всі питання про доставку. Рекомендую.',stars:4}
+  ];
+
+  function loadProducts(){
+    const raw=localStorage.getItem(STORE_KEY);
+    if(!raw){ localStorage.setItem(STORE_KEY, JSON.stringify(seedProducts)); return seedProducts.slice(); }
+    try{ return JSON.parse(raw); }catch(e){ return seedProducts.slice(); }
+  }
+  function saveProducts(list){ localStorage.setItem(STORE_KEY, JSON.stringify(list)); }
+  function loadCategories(){
+    const defaults=['Балончики','Маркери','Кепки та насадки','Грунтовки та захист'];
+    const raw=localStorage.getItem(CATS_KEY);
+    if(!raw){ localStorage.setItem(CATS_KEY, JSON.stringify(defaults)); return defaults.slice(); }
+    try{
+      const parsed=JSON.parse(raw);
+      return Array.isArray(parsed)&&parsed.length ? parsed : defaults.slice();
+    }catch(e){ return defaults.slice(); }
+  }
+  function saveCategories(list){ localStorage.setItem(CATS_KEY, JSON.stringify(list)); }
+  function loadCart(){ try{ return JSON.parse(localStorage.getItem(CART_KEY))||{}; }catch(e){ return {}; } }
+  function saveCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+
+  let products=loadProducts();
+  let categories=loadCategories();
+  let cart=loadCart();
+  let activeCategory='Усі';
+
+  const grid=document.getElementById('productGrid');
+  const filtersEl=document.getElementById('catFilters');
+  const productCount=document.getElementById('productCount');
+  const bestsellerRow=document.getElementById('bestsellerRow');
+
+  function filterCategories(){
+    const set=new Set([...categories, ...products.map(p=>p.category)]);
+    return ['Усі',...set];
+  }
+
+  function renderFilters(){
+    filtersEl.innerHTML='';
+    filterCategories().forEach(cat=>{
+      const btn=document.createElement('button');
+      btn.className='cat-chip'+(cat===activeCategory?' active':'');
+      btn.textContent=cat;
+      btn.onclick=()=>{ activeCategory=cat; renderFilters(); renderGrid(); };
+      filtersEl.appendChild(btn);
+    });
+  }
+
+  function renderCategoryOptions(){
+    const select=document.getElementById('pCategory');
+    if(!select) return;
+    const current=select.value;
+    select.innerHTML=categories.map(c=>`<option value="${c}">${c}</option>`).join('');
+    if(categories.includes(current)) select.value=current;
+  }
+
+  function renderAdminCategories(){
+    const wrap=document.getElementById('adminCategoryList');
+    if(!wrap) return;
+    if(categories.length===0){
+      wrap.innerHTML='<p class="hint">Категорій ще немає. Додай першу вище.</p>';
+      return;
+    }
+    wrap.innerHTML=categories.map(c=>{
+      const count=products.filter(p=>p.category===c).length;
+      return `
+      <div class="admin-product-row">
+        <span class="name">${c} <span style="color:var(--ink-soft);font-weight:400;">(${count} товар${count===1?'':(count>=2&&count<=4?'и':'ів')})</span></span>
+        <button class="del-product" data-cat="${c}">Видалити</button>
+      </div>`;
+    }).join('');
+    wrap.querySelectorAll('.del-product').forEach(b=>{
+      b.onclick=()=>{
+        const cat=b.dataset.cat;
+        const ok=confirm('Видалити категорію «'+cat+'»? Товари в ній залишаться, але без цієї категорії у списку.');
+        if(!ok) return;
+        categories=categories.filter(c=>c!==cat);
+        saveCategories(categories);
+        renderAdminCategories();
+        renderCategoryOptions();
+        renderFilters();
+        if(activeCategory===cat){ activeCategory='Усі'; renderGrid(); }
+        showToast('Категорію видалено');
+      };
+    });
+  }
+
+  function badgeLabel(b){
+    if(b==='novinka') return {text:'Новинка',cls:'novinka'};
+    if(b==='top') return {text:'Топ',cls:'top'};
+    return null;
+  }
+
+  function productCardHTML(p){
+    const badge=badgeLabel(p.badge);
+    const discountBadge = (p.oldPrice && p.oldPrice>p.price) ? Math.round(100-(p.price/p.oldPrice*100)) : null;
+    const stockLow = p.stock && /2 од\\.|1 од\\.|мало/i.test(p.stock);
+    return `
+      <div class="card">
+        <div class="card-img">
+          <span class="card-cat">${p.category}</span>
+          ${discountBadge ? `<span class="card-badge discount">−${discountBadge}%</span>` : (badge ? `<span class="card-badge ${badge.cls}">${badge.text}</span>` : '')}
+          ${p.image ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none'">` : ''}
+        </div>
+        <div class="card-body">
+          <div class="card-name">${p.name}</div>
+          <div class="card-desc">${p.desc||''}</div>
+          ${p.stock ? `<div class="card-stock${stockLow?' low':''}">${p.stock}</div>` : ''}
+          <div class="card-bottom">
+            <div class="price-wrap">
+              <span class="card-price">${p.price} грн</span>
+              ${p.oldPrice && p.oldPrice>p.price ? `<span class="card-oldprice">${p.oldPrice} грн</span>` : ''}
+            </div>
+            <button class="add-btn" data-id="${p.id}">У кошик</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function renderGrid(){
+    const list = activeCategory==='Усі' ? products : products.filter(p=>p.category===activeCategory);
+    productCount.textContent = list.length + ' товар' + (list.length===1?'':(list.length>=2&&list.length<=4?'и':'ів'));
+    grid.innerHTML='';
+    if(list.length===0){
+      grid.innerHTML='<div class="empty-state">Тут поки що порожньо. Додай перший товар в адмінці.</div>';
+    } else {
+      grid.innerHTML=list.map(productCardHTML).join('');
+    }
+    grid.querySelectorAll('.add-btn').forEach(btn=>{
+      btn.onclick=()=>addToCart(btn.dataset.id);
+    });
+  }
+
+  function renderBestsellers(){
+    const hits=products.filter(p=>p.hit);
+    if(hits.length===0){
+      bestsellerRow.innerHTML='<div class="empty-state" style="min-width:100%;">Познач товари як «Хіт продажів» в адмінці — вони зʼявляться тут.</div>';
+      return;
+    }
+    bestsellerRow.innerHTML=hits.map(productCardHTML).join('');
+    bestsellerRow.querySelectorAll('.add-btn').forEach(btn=>{
+      btn.onclick=()=>addToCart(btn.dataset.id);
+    });
+  }
+
+  function renderTestimonials(){
+    const wrap=document.getElementById('testiGrid');
+    wrap.innerHTML=testimonials.map(t=>`
+      <div class="testi-card">
+        <div class="testi-stars">${'★'.repeat(t.stars)}${'☆'.repeat(5-t.stars)}</div>
+        <div class="testi-text">${t.text}</div>
+        <div class="testi-name">${t.name}</div>
+      </div>`).join('');
+  }
+
+  function addToCart(id){
+    cart[id]=(cart[id]||0)+1;
+    saveCart(cart);
+    renderCartCount();
+    renderCartItems();
+    showToast('Додано у кошик');
+  }
+  function changeQty(id,delta){
+    cart[id]=(cart[id]||0)+delta;
+    if(cart[id]<=0) delete cart[id];
+    saveCart(cart);
+    renderCartCount();
+    renderCartItems();
+  }
+  function removeFromCart(id){
+    delete cart[id];
+    saveCart(cart);
+    renderCartCount();
+    renderCartItems();
+  }
+
+  function renderCartCount(){
+    const count=Object.values(cart).reduce((a,b)=>a+b,0);
+    document.getElementById('cartCount').textContent=count;
+  }
+
+  function renderCartItems(){
+    const wrap=document.getElementById('cartItems');
+    const ids=Object.keys(cart);
+    if(ids.length===0){
+      wrap.innerHTML='<p class="hint">Кошик порожній. Додай товари з каталогу.</p>';
+      document.getElementById('cartTotal').textContent='0 грн';
+      return;
+    }
+    let total=0;
+    wrap.innerHTML='';
+    ids.forEach(id=>{
+      const p=products.find(x=>x.id===id);
+      if(!p) return;
+      const qty=cart[id];
+      total+=p.price*qty;
+      const row=document.createElement('div');
+      row.className='cart-item';
+      row.innerHTML=`
+        ${p.image?`<img src="${p.image}" alt="">`:'<div style="width:60px;height:60px;background:var(--concrete-dark);border-radius:2px;"></div>'}
+        <div class="cart-item-info">
+          <div class="name">${p.name}</div>
+          <div class="price">${p.price} грн</div>
+          <div class="qty-row">
+            <button class="qty-btn" data-act="minus" data-id="${id}">−</button>
+            <span>${qty}</span>
+            <button class="qty-btn" data-act="plus" data-id="${id}">+</button>
+            <button class="remove-link" data-id="${id}">Видалити</button>
+          </div>
+        </div>`;
+      wrap.appendChild(row);
+    });
+    document.getElementById('cartTotal').textContent=total+' грн';
+    wrap.querySelectorAll('.qty-btn').forEach(b=>{
+      b.onclick=()=>changeQty(b.dataset.id, b.dataset.act==='plus'?1:-1);
+    });
+    wrap.querySelectorAll('.remove-link').forEach(b=>{
+      b.onclick=()=>removeFromCart(b.dataset.id);
+    });
+  }
+
+  function showToast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer=setTimeout(()=>t.classList.remove('show'),2200);
+  }
+
+  function openOverlay(id){ document.getElementById(id).classList.add('open'); }
+  function closeOverlay(id){ document.getElementById(id).classList.remove('open'); }
+
+  document.getElementById('openCartBtn').onclick=()=>{ renderCartItems(); openOverlay('cartOverlay'); };
+  document.getElementById('closeCart').onclick=()=>closeOverlay('cartOverlay');
+  document.getElementById('cartOverlay').addEventListener('click',e=>{ if(e.target.id==='cartOverlay') closeOverlay('cartOverlay'); });
+
+  document.getElementById('checkoutBtn').onclick=()=>{
+    if(Object.keys(cart).length===0){ showToast('Кошик порожній'); return; }
+    closeOverlay('cartOverlay');
+    openOverlay('checkoutOverlay');
+    resetCheckoutDeliveryFields();
+  };
+  document.getElementById('closeCheckout').onclick=()=>closeOverlay('checkoutOverlay');
+  document.getElementById('checkoutOverlay').addEventListener('click',e=>{ if(e.target.id==='checkoutOverlay') closeOverlay('checkoutOverlay'); });
+
+  // ===== Nova Poshta integration =====
+  const NP_API_URL='https://api.novaposhta.ua/v2.0/json/';
+  let npSelectedCity=null; // {ref, name}
+  let npSelectedWarehouse=null; // {ref, description}
+  let npWarehouses=[];
+  let npDebounceTimer=null;
+
+  function npHasKey(){ return !!(localStorage.getItem(NP_KEY)||'').trim(); }
+
+  async function npApiRequest(modelName, calledMethod, methodProperties){
+    const apiKey=(localStorage.getItem(NP_KEY)||'').trim();
+    const res=await fetch(NP_API_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({apiKey, modelName, calledMethod, methodProperties: methodProperties||{}})
+    });
+    const data=await res.json();
+    if(!data.success){ throw new Error((data.errors&&data.errors[0])||'Помилка Нової пошти'); }
+    return data.data;
+  }
+
+  function toggleDeliveryFields(){
+    const delivery=document.querySelector('input[name="delivery"]:checked').value;
+    const npFields=document.getElementById('npFields');
+    const genericField=document.getElementById('genericAddressField');
+    const npHint=document.getElementById('npHint');
+    if(delivery==='Нова пошта' && npHasKey()){
+      npFields.style.display='block';
+      genericField.style.display='none';
+      npHint.textContent='';
+    } else if(delivery==='Нова пошта' && !npHasKey()){
+      npFields.style.display='none';
+      genericField.style.display='block';
+      document.getElementById('orderAddress').placeholder='Місто, № відділення Нової пошти';
+      document.querySelector('#genericAddressField label').textContent='Місто, № відділення';
+    } else {
+      npFields.style.display='none';
+      genericField.style.display='block';
+      document.getElementById('orderAddress').placeholder = delivery==='Укрпошта' ? 'Місто, відділення Укрпошти' : 'Адреса самовивозу / коментар';
+      document.querySelector('#genericAddressField label').textContent = delivery==='Укрпошта' ? 'Місто / відділення Укрпошти' : 'Коментар';
+    }
+  }
+
+  function resetCheckoutDeliveryFields(){
+    npSelectedCity=null; npSelectedWarehouse=null; npWarehouses=[];
+    document.getElementById('npCityInput').value='';
+    document.getElementById('npCitySuggest').innerHTML='';
+    document.getElementById('npCitySuggest').classList.remove('open');
+    const wSelect=document.getElementById('npWarehouseSelect');
+    wSelect.innerHTML='<option value="">Спочатку обери місто</option>';
+    wSelect.disabled=true;
+    document.getElementById('npWarehouseFilter').value='';
+    document.getElementById('npWarehouseFilter').disabled=true;
+    document.getElementById('orderAddress').value='';
+    toggleDeliveryFields();
+  }
+
+  document.querySelectorAll('input[name="delivery"]').forEach(r=>{
+    r.addEventListener('change', toggleDeliveryFields);
+  });
+
+  const npCityInput=document.getElementById('npCityInput');
+  const npCitySuggest=document.getElementById('npCitySuggest');
+
+  npCityInput.addEventListener('input',()=>{
+    npSelectedCity=null;
+    clearTimeout(npDebounceTimer);
+    const q=npCityInput.value.trim();
+    if(q.length<2){ npCitySuggest.classList.remove('open'); npCitySuggest.innerHTML=''; return; }
+    npDebounceTimer=setTimeout(async ()=>{
+      npCitySuggest.innerHTML='<div class="np-suggest-empty">Пошук…</div>';
+      npCitySuggest.classList.add('open');
+      try{
+        const data=await npApiRequest('Address','getCities',{FindByString:q, Limit:'8'});
+        if(!data.length){
+          npCitySuggest.innerHTML='<div class="np-suggest-empty">Нічого не знайдено</div>';
+          return;
+        }
+        npCitySuggest.innerHTML='';
+        data.forEach(city=>{
+          const item=document.createElement('div');
+          item.className='np-suggest-item';
+          item.textContent=city.Description+(city.AreaDescription?(', '+city.AreaDescription+' обл.'):'');
+          item.onclick=()=>{
+            npSelectedCity={ref:city.Ref, name:city.Description};
+            npCityInput.value=city.Description;
+            npCitySuggest.classList.remove('open');
+            npCitySuggest.innerHTML='';
+            loadWarehouses();
+          };
+          npCitySuggest.appendChild(item);
+        });
+      }catch(err){
+        npCitySuggest.innerHTML='<div class="np-suggest-empty">Помилка запиту. Перевір ключ API в адмінці.</div>';
+      }
+    },350);
+  });
+
+  document.addEventListener('click',(e)=>{
+    if(!npCitySuggest.contains(e.target) && e.target!==npCityInput){
+      npCitySuggest.classList.remove('open');
+    }
+  });
+
+  async function loadWarehouses(){
+    const wSelect=document.getElementById('npWarehouseSelect');
+    const wFilter=document.getElementById('npWarehouseFilter');
+    wSelect.innerHTML='<option value="">Завантаження відділень…</option>';
+    wSelect.disabled=true;
+    wFilter.disabled=true;
+    npSelectedWarehouse=null;
+    if(!npSelectedCity) return;
+    try{
+      const data=await npApiRequest('Address','getWarehouses',{CityRef:npSelectedCity.ref, Limit:'500'});
+      npWarehouses=data.map(w=>({ref:w.Ref, description:w.Description, number:w.Number}));
+      renderWarehouseOptions(npWarehouses);
+      wSelect.disabled=false;
+      wFilter.disabled=false;
+      wFilter.value='';
+    }catch(err){
+      wSelect.innerHTML='<option value="">Не вдалось завантажити. Перевір ключ API.</option>';
+    }
+  }
+
+  function renderWarehouseOptions(list){
+    const wSelect=document.getElementById('npWarehouseSelect');
+    if(!list.length){
+      wSelect.innerHTML='<option value="">Відділень не знайдено</option>';
+      return;
+    }
+    wSelect.innerHTML='<option value="">Обери відділення</option>'+
+      list.map(w=>`<option value="${w.ref}">${w.description}</option>`).join('');
+  }
+
+  document.getElementById('npWarehouseFilter').addEventListener('input',(e)=>{
+    const q=e.target.value.trim().toLowerCase();
+    const filtered = q ? npWarehouses.filter(w=>w.description.toLowerCase().includes(q)) : npWarehouses;
+    renderWarehouseOptions(filtered);
+  });
+
+  document.getElementById('npWarehouseSelect').addEventListener('change',(e)=>{
+    const ref=e.target.value;
+    npSelectedWarehouse = npWarehouses.find(w=>w.ref===ref) || null;
+  });
+
+  document.getElementById('submitOrderBtn').onclick=()=>{
+    const name=document.getElementById('orderName').value.trim();
+    const phone=document.getElementById('orderPhone').value.trim();
+    const delivery=document.querySelector('input[name="delivery"]:checked').value;
+    if(!name||!phone){ showToast("Заповни ім'я та телефон"); return; }
+
+    let address='';
+    if(delivery==='Нова пошта' && npHasKey()){
+      if(!npSelectedCity||!npSelectedWarehouse){ showToast('Обери місто та відділення Нової пошти'); return; }
+      address=npSelectedCity.name+', '+npSelectedWarehouse.description;
+    } else {
+      address=document.getElementById('orderAddress').value.trim();
+      if(!address){ showToast('Вкажи адресу або відділення'); return; }
+    }
+
+    const items=Object.keys(cart).map(id=>{
+      const p=products.find(x=>x.id===id);
+      return p ? {id,name:p.name,price:p.price,qty:cart[id]} : null;
+    }).filter(Boolean);
+    const total=items.reduce((a,it)=>a+it.price*it.qty,0);
+    const order={id:'o'+Date.now(),name,phone,address,delivery,items,total,date:new Date().toISOString()};
+    const orders=JSON.parse(localStorage.getItem(ORDERS_KEY)||'[]');
+    orders.push(order);
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+    cart={}; saveCart(cart); renderCartCount(); renderCartItems();
+    closeOverlay('checkoutOverlay');
+    showToast('Замовлення оформлено!');
+    document.getElementById('orderName').value='';
+    document.getElementById('orderPhone').value='';
+    resetCheckoutDeliveryFields();
+  };
+
+  document.getElementById('openAdminBtn').onclick=()=>{ openOverlay('loginOverlay'); };
+  document.getElementById('closeLogin').onclick=()=>closeOverlay('loginOverlay');
+  document.getElementById('loginOverlay').addEventListener('click',e=>{ if(e.target.id==='loginOverlay') closeOverlay('loginOverlay'); });
+
+  document.getElementById('loginBtn').onclick=()=>{
+    const input=document.getElementById('adminPassword').value;
+    const savedPass=localStorage.getItem(PASS_KEY);
+    if(!savedPass){
+      if(!input){ showToast('Введи пароль'); return; }
+      localStorage.setItem(PASS_KEY, input);
+      closeOverlay('loginOverlay');
+      openAdmin();
+      showToast('Пароль встановлено');
+    } else if(input===savedPass){
+      closeOverlay('loginOverlay');
+      openAdmin();
+    } else {
+      showToast('Невірний пароль');
+    }
+    document.getElementById('adminPassword').value='';
+  };
+
+  function openAdmin(){
+    document.getElementById('npApiKey').value=localStorage.getItem(NP_KEY)||'';
+    renderCategoryOptions();
+    renderAdminProducts();
+    renderAdminCategories();
+    renderOrders();
+    openOverlay('adminOverlay');
+  }
+  document.getElementById('closeAdmin').onclick=()=>closeOverlay('adminOverlay');
+  document.getElementById('backToShop').onclick=(e)=>{ e.preventDefault(); closeOverlay('adminOverlay'); };
+
+  document.querySelectorAll('.admin-tab').forEach(tab=>{
+    tab.onclick=()=>{
+      document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
+    };
+  });
+
+  document.getElementById('saveApiKey').onclick=()=>{
+    localStorage.setItem(NP_KEY, document.getElementById('npApiKey').value.trim());
+    showToast('Ключ збережено');
+  };
+
+  document.getElementById('addCategoryBtn').onclick=()=>{
+    const input=document.getElementById('newCategoryName');
+    const name=input.value.trim();
+    if(!name){ showToast('Введи назву категорії'); return; }
+    if(categories.some(c=>c.toLowerCase()===name.toLowerCase())){ showToast('Така категорія вже є'); return; }
+    categories.push(name);
+    saveCategories(categories);
+    input.value='';
+    renderAdminCategories();
+    renderCategoryOptions();
+    renderFilters();
+    showToast('Категорію додано');
+  };
+
+  document.getElementById('addProductBtn').onclick=()=>{
+    const name=document.getElementById('pName').value.trim();
+    const price=parseFloat(document.getElementById('pPrice').value);
+    const oldPriceRaw=document.getElementById('pOldPrice').value;
+    const oldPrice=oldPriceRaw?parseFloat(oldPriceRaw):null;
+    const category=document.getElementById('pCategory').value;
+    const badge=document.getElementById('pBadge').value;
+    const stock=document.getElementById('pStock').value.trim();
+    const hit=document.getElementById('pHit').checked;
+    const image=document.getElementById('pImage').value.trim();
+    const desc=document.getElementById('pDesc').value.trim();
+    if(!name||!price){ showToast('Заповни назву і ціну'); return; }
+    const newProduct={id:'p'+Date.now(),name,price,oldPrice,category,badge,stock,hit,image,desc};
+    products.push(newProduct);
+    saveProducts(products);
+    document.getElementById('pName').value='';
+    document.getElementById('pPrice').value='';
+    document.getElementById('pOldPrice').value='';
+    document.getElementById('pStock').value='';
+    document.getElementById('pHit').checked=false;
+    document.getElementById('pImage').value='';
+    document.getElementById('pDesc').value='';
+    renderFilters(); renderGrid(); renderBestsellers(); renderAdminProducts();
+    showToast('Товар додано');
+  };
+
+  function renderAdminProducts(){
+    const wrap=document.getElementById('adminProductList');
+    wrap.innerHTML='';
+    products.forEach(p=>{
+      const row=document.createElement('div');
+      row.className='admin-product-row';
+      row.innerHTML=`
+        ${p.image?`<img src="${p.image}" alt="">`:'<div style="width:42px;height:42px;background:var(--concrete-dark);border-radius:2px;"></div>'}
+        <span class="name">${p.name} — ${p.price} грн${p.hit?' ★':''}</span>
+        <button class="del-product" data-id="${p.id}">Видалити</button>`;
+      wrap.appendChild(row);
+    });
+    wrap.querySelectorAll('.del-product').forEach(b=>{
+      b.onclick=()=>{
+        const prod=products.find(p=>p.id===b.dataset.id);
+        const ok=confirm('Видалити товар «'+(prod?prod.name:'')+'»? Дію не можна скасувати.');
+        if(!ok) return;
+        products=products.filter(p=>p.id!==b.dataset.id);
+        saveProducts(products);
+        // also remove from any cart in this browser
+        if(cart[b.dataset.id]){ delete cart[b.dataset.id]; saveCart(cart); renderCartCount(); renderCartItems(); }
+        renderFilters(); renderGrid(); renderBestsellers(); renderAdminProducts();
+        showToast('Товар видалено');
+      };
+    });
+  }
+
+  function renderOrders(){
+    const wrap=document.getElementById('ordersList');
+    const orders=JSON.parse(localStorage.getItem(ORDERS_KEY)||'[]').slice().reverse();
+    if(orders.length===0){
+      wrap.innerHTML='<p class="hint">Замовлень поки немає.</p>';
+      return;
+    }
+    wrap.innerHTML=orders.map(o=>`
+      <div class="order-row">
+        <b>${o.name} — ${o.total} грн</b>
+        <div class="meta">${o.phone} · ${o.delivery}${o.address?(' · '+o.address):''} · ${new Date(o.date).toLocaleString('uk-UA')}</div>
+        <div>${o.items.map(it=>it.name+' × '+it.qty).join(', ')}</div>
+      </div>`).join('');
+  }
+
+  // init
+  renderFilters();
+  renderGrid();
+  renderBestsellers();
+  renderTestimonials();
+  renderCartCount();
+  renderCategoryOptions();
+  toggleDeliveryFields();
+})();
+</script>
+</body>
+</html>
